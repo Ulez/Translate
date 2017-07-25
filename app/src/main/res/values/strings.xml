@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Translate</string>
+    <string name="loading">查询中...</string>
+    <string name="cant">未能获取剪切板内容，请重新复制</string>
+    <string name="permission_refuse">未能获取授予浮窗权限，只能使用极简模式翻译</string>
+</resources>
