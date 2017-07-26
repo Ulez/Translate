@@ -75,36 +75,65 @@ public class TipView extends LinearLayout {
     }
 
     public void update(YouDaoBean youDaoBean) {
-        youDao = youDaoBean;
+        try {
+            youDao = youDaoBean;
+            resetText();
+            Log.e(TAG, "update=" + youDaoBean.getQuery() + youDaoBean.getTranslation().get(0));
+            tvWord.setText(youDaoBean.getQuery());
+            tvResult.setText(youDaoBean.getTranslation().get(0));
+            tvPronounce.setText("[" + youDaoBean.getBasic().getPhonetic() + "]");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void resetText() {
+        tvExplains.setText("");
+        tvSynonyms.setText("");
+        tvWord.setText("");
+        tvResult.setText("");
+        tvPronounce.setText("");
+
         imMore.setVisibility(VISIBLE);
         imHide.setVisibility(GONE);
         tvSynonyms.setVisibility(GONE);
         tvExplains.setVisibility(GONE);
-        Log.e(TAG, "update=" + youDaoBean.getQuery() + youDaoBean.getTranslation().get(0));
-        tvWord.setText(youDaoBean.getQuery());
-        tvPronounce.setText("[" + youDaoBean.getBasic().getPhonetic() + "]");
-        tvResult.setText(youDaoBean.getTranslation().get(0));
     }
 
     public void addMore() {
-        if (youDao != null) {
-            if (serviceWeakReference != null && serviceWeakReference.get() != null)
-                serviceWeakReference.get().cancelHide();
-            tvExplains.setVisibility(VISIBLE);
-            tvSynonyms.setVisibility(VISIBLE);
-            imHide.setVisibility(VISIBLE);
-            List<String> explains = youDao.getBasic().getExplains();
-            List<YouDaoBean.WebBean> webBeanList = youDao.getWeb();
-            String result = "";
-            for (String s : explains) {
-                result += s + "\n";
+        try {
+            if (youDao != null) {
+                if (serviceWeakReference != null && serviceWeakReference.get() != null)
+                    serviceWeakReference.get().cancelHide();
+                tvExplains.setVisibility(VISIBLE);
+                tvSynonyms.setVisibility(VISIBLE);
+                imHide.setVisibility(VISIBLE);
+                tvExplains.setText(getALl(youDao.getBasic().getExplains()));
+                tvSynonyms.setText(getALl2(youDao.getWeb()));
             }
-            tvExplains.setText(result);
-            for (YouDaoBean.WebBean webBean : webBeanList) {
-                result += (webBean.getKey() + ":" + webBean.getValue() + "\n");
-            }
-            tvSynonyms.setText(result);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    private String getALl2(List<YouDaoBean.WebBean> webBeanList) {
+        if (webBeanList == null || webBeanList.size() <= 0)
+            return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (YouDaoBean.WebBean webBean : webBeanList) {
+            stringBuilder.append("\n" + webBean.getKey() + ":" + webBean.getValue());
+        }
+        return stringBuilder.toString();
+    }
+
+    private String getALl(List<String> explains) {
+        if (explains == null || explains.size() <= 0)
+            return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : explains) {
+            stringBuilder.append("\n" + s);
+        }
+        return stringBuilder.toString();
     }
 
     public void setOnMoreClickListener(ListenClipboardService service) {

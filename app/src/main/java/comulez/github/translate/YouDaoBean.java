@@ -227,6 +227,18 @@ public class YouDaoBean implements Parcelable {
         dest.writeStringList(this.translation);
     }
 
+    @Override
+    public String toString() {
+        return "YouDaoBean{" +
+                "query='" + query + '\'' +
+                ", errorCode='" + errorCode + '\'' +
+                ", basic=" + basic +
+                ", l='" + l + '\'' +
+                ", web=" + web +
+                ", translation=" + translation +
+                '}';
+    }
+
     public YouDaoBean() {
     }
 
