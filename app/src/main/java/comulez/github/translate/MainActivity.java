@@ -51,13 +51,12 @@ public class MainActivity extends AppCompatActivity {
      * 请求用户给予悬浮窗的权限
      */
     public void askForPermission() {
-        if (Utils.isM() && !Utils.hasOverlayPermission()) {
+        if (Utils.isM() && !Settings.canDrawOverlays(this)) {
             new AlertDialog.Builder(this).setMessage("使用翻译的划词翻译功能需要你授予浮窗权限。")
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
                         }
                     })

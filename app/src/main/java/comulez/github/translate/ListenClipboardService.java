@@ -17,7 +17,6 @@ import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -58,9 +57,9 @@ public class ListenClipboardService extends Service implements View.OnClickListe
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Constant.removePop:
-                    ListenClipboardService activity = (ListenClipboardService) reference.get();
-                    if (activity != null) {
-                        activity.onRemove();
+                    ListenClipboardService service = (ListenClipboardService) reference.get();
+                    if (service != null) {
+                        service.onRemove();
                     }
             }
         }
@@ -80,19 +79,13 @@ public class ListenClipboardService extends Service implements View.OnClickListe
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<YouDaoBean>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
+                .subscribe(new PbSubscriber<YouDaoBean>() {
                     @Override
                     public void onNext(YouDaoBean youDaoBean) {
                         if (youDaoBean != null) {
                             showPopView(youDaoBean);
+                        } else {
+                            Utils.t(R.string.noresult);
                         }
                     }
                 });
@@ -108,7 +101,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
         mWindowManager.addView(tipView, getPopViewParams());
         Message msg = Message.obtain();
         msg.what = Constant.removePop;
-        handler.sendMessageDelayed(msg, 2000);
+        handler.sendMessageDelayed(msg, Utils.getInt(Constant.SHOW_DURATION, 3000));
     }
 
     private WindowManager.LayoutParams getPopViewParams() {
