@@ -5,6 +5,7 @@
     <string name="cant">未能获取剪切板内容，请重新复制</string>
     <string name="permission_refuse">未能获取授予浮窗权限，只能使用极简模式翻译</string>
     <string name="noresult">无查询结果</string>
+    <string name="no_permission">未能获取授予浮窗权限</string>
 
     <string name="server_connect_error">无法连接服务器</string>
     <string name="json_parse_error">json解析错误</string>
@@ -14,4 +15,5 @@
     <string name="order_error">未知工单</string>
     <string name="json_error2">服务器返回错误结果</string>
     <string name="unknown_host_error">无网络或域名错误</string>
+    <string name="tip1">使用划词翻译功能需要你授予浮窗权限.若未获取授予浮窗权限，只能使用极简模式翻译.</string>
 </resources>

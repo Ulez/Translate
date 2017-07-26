@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 /**
  * Created by Ulez on 2017/7/25.
@@ -24,13 +23,12 @@ public class TipView extends LinearLayout {
     private ImageView imHide;
     private WeakReference<ListenClipboardService> serviceWeakReference;
     private static final String TAG = "TipView";
-    private ImageView imMore;
     private TextView tvExplains;
     private TextView tvSynonyms;
     private TextView tvWord;
     private TextView tvResult;
     private TextView tvPronounce;
-    private LinearLayout mLlSrc;
+    private RelativeLayout mLlSrc;
     private View mContentView;
     private YouDaoBean youDao;
 
@@ -54,12 +52,10 @@ public class TipView extends LinearLayout {
         tvPronounce = (TextView) mContainer.findViewById(R.id.tv_pronounce);
         tvSynonyms = (TextView) mContainer.findViewById(R.id.tv_synonyms);
         tvExplains = (TextView) mContainer.findViewById(R.id.tv_Explains);
-        imMore = (ImageView) mContainer.findViewById(R.id.im_more);
         imHide = (ImageView) mContainer.findViewById(R.id.im_hide);
-        imMore.setOnClickListener(new OnClickListener() {
+        mContainer.findViewById(R.id.ll_pop_src).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                imMore.setVisibility(GONE);
                 addMore();
             }
         });
@@ -70,7 +66,7 @@ public class TipView extends LinearLayout {
                     serviceWeakReference.get().hide();
             }
         });
-        mLlSrc = (LinearLayout) mContainer.findViewById(R.id.ll_pop_src);
+        mLlSrc = (RelativeLayout) mContainer.findViewById(R.id.ll_pop_src);
         mContentView = mContainer.findViewById(R.id.pop_view_content_view);
     }
 
@@ -94,7 +90,6 @@ public class TipView extends LinearLayout {
         tvResult.setText("");
         tvPronounce.setText("");
 
-        imMore.setVisibility(VISIBLE);
         imHide.setVisibility(GONE);
         tvSynonyms.setVisibility(GONE);
         tvExplains.setVisibility(GONE);
@@ -108,32 +103,12 @@ public class TipView extends LinearLayout {
                 tvExplains.setVisibility(VISIBLE);
                 tvSynonyms.setVisibility(VISIBLE);
                 imHide.setVisibility(VISIBLE);
-                tvExplains.setText(getALl(youDao.getBasic().getExplains()));
-                tvSynonyms.setText(getALl2(youDao.getWeb()));
+                tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains()));
+                tvSynonyms.setText(Utils.getALl2(youDao.getWeb()));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private String getALl2(List<YouDaoBean.WebBean> webBeanList) {
-        if (webBeanList == null || webBeanList.size() <= 0)
-            return "";
-        StringBuilder stringBuilder = new StringBuilder();
-        for (YouDaoBean.WebBean webBean : webBeanList) {
-            stringBuilder.append("\n" + webBean.getKey() + ":" + webBean.getValue());
-        }
-        return stringBuilder.toString();
-    }
-
-    private String getALl(List<String> explains) {
-        if (explains == null || explains.size() <= 0)
-            return "";
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String s : explains) {
-            stringBuilder.append("\n" + s);
-        }
-        return stringBuilder.toString();
     }
 
     public void setOnMoreClickListener(ListenClipboardService service) {

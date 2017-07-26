@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -95,6 +96,12 @@ public class ListenClipboardService extends Service implements View.OnClickListe
 
     @Override
     public void showResult(YouDaoBean youDaoBean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Utils.t(youDaoBean.getTranslation().get(0));
+                return;
+            }
+        }
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         if (tipView == null) {
             tipView = new TipView(this);

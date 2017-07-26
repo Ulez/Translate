@@ -30,4 +30,5 @@
     <dimen name="md_content_padding_top">8dp</dimen>
     <dimen name="icon_size_pop">40dp</dimen>
     <dimen name="leftmargin">20dp</dimen>
+    <dimen name="leftmargin2">5dp</dimen>
 </resources>

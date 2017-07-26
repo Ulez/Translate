@@ -18,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,6 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static comulez.github.translate.Constant.showPop;
+import static comulez.github.translate.Utils.getALl2;
 
 public class MainActivity extends AppCompatActivity implements ITranslate {
 
@@ -47,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
     Button button;
     @Bind(R.id.pop_view_content_view)
     RelativeLayout popViewContentView;
+    @Bind(R.id.button_per)
+    Button buttonPer;
     private Intent intent;
     private int OVERLAY_PERMISSION_REQ_CODE = 45;
     private String[] PERMISSIONS = {
@@ -63,13 +64,14 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         intent = new Intent(this, ListenClipboardService.class);
+        startService(intent);
         askForPermission();
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
         Utils.putT(showPop, false);
+        super.onResume();
     }
 
     /**
@@ -77,12 +79,11 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
      */
     public void askForPermission() {
         if (Utils.isM() && !Utils.getBoolean(Constant.hasPermission, false)) {
-            new AlertDialog.Builder(this).setMessage("使用翻译的划词翻译功能需要你授予浮窗权限。")
+            new AlertDialog.Builder(this).setMessage(getString(R.string.tip1))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                            startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+                            requestPermission();
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, null)
@@ -90,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
         } else {
             startService(intent);
         }
+    }
+
+    private void requestPermission() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
     }
 
     /**
@@ -114,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
 
     @Override
     protected void onPause() {
-        super.onPause();
         Utils.putT(Constant.showPop, true);
+        super.onPause();
     }
 
     @Override
@@ -156,8 +162,8 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
         String phonetic = youDaoBean.getBasic().getPhonetic();
         if (!TextUtils.isEmpty(phonetic))
             tvPronounce.setText("[" + phonetic + "]");
-        tvExplains.setText(getALl(youDao.getBasic().getExplains()));
-        tvSynonyms.setText(getALl2(youDao.getWeb()).replace("\\n", "\n"));
+        tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains()));
+        tvSynonyms.setText(Utils.getALl2(youDao.getWeb()).replace("\\n", "\n"));
     }
 
     private void resetText() {
@@ -168,27 +174,8 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
         tvPronounce.setText("");
     }
 
-    private String getALl2(List<YouDaoBean.WebBean> webBeanList) {
-        if (webBeanList == null || webBeanList.size() <= 0)
-            return "";
-        StringBuilder stringBuilder = new StringBuilder();
-        for (YouDaoBean.WebBean webBean : webBeanList) {
-            stringBuilder.append(webBean.getKey() + ":" + webBean.getValue() + "\n");
-        }
-        return stringBuilder.toString();
-    }
 
-    private String getALl(List<String> explains) {
-        if (explains == null || explains.size() <= 0)
-            return "";
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String s : explains) {
-            stringBuilder.append(s + "\n");
-        }
-        return stringBuilder.toString();
-    }
-
-    @OnClick({R.id.tv_word, R.id.iv_trans, R.id.button})
+    @OnClick({R.id.tv_word, R.id.iv_trans, R.id.button, R.id.button_per})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_word:
@@ -200,6 +187,9 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
             case R.id.button:
                 stopService(intent);
                 finish();
+                break;
+            case R.id.button_per:
+                requestPermission();
                 break;
         }
     }

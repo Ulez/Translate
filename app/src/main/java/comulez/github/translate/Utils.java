@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -173,5 +174,26 @@ public class Utils {
 
     public static void removeAll() {
         sp.edit().clear().commit();
+    }
+
+
+    public static String getALl2(List<YouDaoBean.WebBean> webBeanList) {
+        if (webBeanList == null || webBeanList.size() <= 0)
+            return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (YouDaoBean.WebBean webBean : webBeanList) {
+            stringBuilder.append(webBean.getKey() + ":" + webBean.getValue() + "\n");
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String getALl(List<String> explains) {
+        if (explains == null || explains.size() <= 0)
+            return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : explains) {
+            stringBuilder.append(s + "\n");
+        }
+        return stringBuilder.toString();
     }
 }

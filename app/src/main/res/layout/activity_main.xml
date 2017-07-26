@@ -87,4 +87,14 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:text="退出"
         android:textColor="@android:color/white" />
+
+    <Button
+        android:layout_marginLeft="@dimen/leftmargin"
+        android:id="@+id/button_per"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:text="设置权限"
+        android:textColor="@android:color/white" />
 </RelativeLayout>
