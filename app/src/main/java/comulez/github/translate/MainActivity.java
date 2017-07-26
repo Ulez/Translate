@@ -25,7 +25,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static comulez.github.translate.Constant.showPop;
-import static comulez.github.translate.Utils.getALl2;
 
 public class MainActivity extends AppCompatActivity implements ITranslate {
 
@@ -48,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
     RelativeLayout popViewContentView;
     @Bind(R.id.button_per)
     Button buttonPer;
+    @Bind(R.id.button_clean)
+    Button buttonClean;
     private Intent intent;
     private int OVERLAY_PERMISSION_REQ_CODE = 45;
     private String[] PERMISSIONS = {
@@ -157,25 +158,23 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
     public void showResult(YouDaoBean youDaoBean) {
         youDao = youDaoBean;
         resetText();
-        tvWord.setText(youDaoBean.getQuery());
         tvResult.setText(youDaoBean.getTranslation().get(0));
         String phonetic = youDaoBean.getBasic().getPhonetic();
         if (!TextUtils.isEmpty(phonetic))
             tvPronounce.setText("[" + phonetic + "]");
         tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains()));
-        tvSynonyms.setText(Utils.getALl2(youDao.getWeb()).replace("\\n", "\n"));
+        tvSynonyms.setText(Utils.getALl2(youDao.getWeb()));
     }
 
     private void resetText() {
         tvExplains.setText("");
         tvSynonyms.setText("");
-        tvWord.setText("");
         tvResult.setText("");
         tvPronounce.setText("");
     }
 
 
-    @OnClick({R.id.tv_word, R.id.iv_trans, R.id.button, R.id.button_per})
+    @OnClick({R.id.tv_word, R.id.iv_trans, R.id.button, R.id.button_per, R.id.button_clean})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_word:
@@ -190,6 +189,10 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
                 break;
             case R.id.button_per:
                 requestPermission();
+                break;
+            case R.id.button_clean:
+                tvWord.setText("");
+                resetText();
                 break;
         }
     }

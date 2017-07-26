@@ -18,14 +18,6 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/iv_trans"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_forward_link" />
-
         <TextView
             android:id="@+id/tv_pronounce"
             android:layout_width="wrap_content"
@@ -49,6 +41,14 @@
             android:textColor="@android:color/white"
             android:textColorHint="@color/md_blue_grey_500"
             android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_trans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_forward_link" />
     </RelativeLayout>
 
     <TextView
@@ -89,12 +89,22 @@
         android:textColor="@android:color/white" />
 
     <Button
-        android:layout_marginLeft="@dimen/leftmargin"
         android:id="@+id/button_per"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/leftmargin"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:text="设置权限"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/button_clean"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:text="清空"
         android:textColor="@android:color/white" />
 </RelativeLayout>

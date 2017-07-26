@@ -7,6 +7,11 @@
     <string name="noresult">无查询结果</string>
     <string name="no_permission">未能获取授予浮窗权限</string>
 
+    <string name="test">在当时，大家根据以往的经验(凤凰彩蛋等等)，推测在6.80会推出新英雄孙悟空，然而并没有如愿。最终我们在3年后全新的7.00版本见到了真正的齐天大圣，也迎来了史无前例的游戏性更新。
+彩蛋2：7.01
+相比6.79才出现的孙悟空彩蛋，下面这个彩蛋来的就很早了，以至于现在只能用1.20版本的War3打开当时的地图。
+在2008年愚人节，IceFrog制作了一张7.01_Ultra_Beta地图。从地图内容上来看，除了进行了一些模型升级和置换，并没有太多其他的东西，而在读图界面显示的是7.01 Ultra，游戏内版本号依旧写的v6.51。可能只是IceFrog一时兴起在愚人节和大家开个玩笑吧。</string>
+
     <string name="server_connect_error">无法连接服务器</string>
     <string name="json_parse_error">json解析错误</string>
     <string name="timeout_error">连接服务器超时"</string>
