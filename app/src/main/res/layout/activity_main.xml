@@ -4,48 +4,79 @@
     android:id="@+id/pop_view_content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@color/md_blue_grey_700"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_pop_src"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:gravity="center"
+        android:layout_marginLeft="@dimen/leftmargin"
+        android:layout_marginRight="@dimen/leftmargin"
+        android:layout_marginTop="@dimen/leftmargin"
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <TextView
-            android:id="@+id/tv_word"
+        <ImageView
+            android:id="@+id/iv_trans"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_forward_link" />
 
         <TextView
             android:id="@+id/tv_pronounce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
+            android:layout_toEndOf="@+id/tv_word"
+            android:textColor="@android:color/white"
             tools:text="[wɑ:t]" />
-    </LinearLayout>
+
+        <EditText
+            android:id="@+id/tv_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:gravity="left"
+            android:hint="@string/inputX"
+            android:includeFontPadding="false"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/md_blue_grey_500"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ll_pop_src"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="10dp"
-        android:gravity="center"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_below="@id/ll_pop_src"
+        android:layout_marginLeft="@dimen/leftmargin"
+        android:textColor="@android:color/white"
         android:visibility="visible"
         tools:text="查词中..."
         tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_Explains"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_result"
+        android:layout_marginLeft="@dimen/leftmargin"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_synonyms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_Explains"
+        android:layout_marginLeft="@dimen/leftmargin"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/button"
@@ -53,5 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="退出" />
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:text="退出"
+        android:textColor="@android:color/white" />
 </RelativeLayout>

@@ -20,10 +20,10 @@ import java.lang.ref.WeakReference;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ListenClipboardService extends Service implements View.OnClickListener {
+public class ListenClipboardService extends Service implements View.OnClickListener, ITranslate {
 
     private ClipboardManager clipboard;
-    private static final String appkey = "7d3db18774c877c1";
+
     private static final String TAG = "ListenClipboardService";
     private MyHandler handler;
     private WindowManager mWindowManager;
@@ -74,7 +74,8 @@ public class ListenClipboardService extends Service implements View.OnClickListe
     public ListenClipboardService() {
     }
 
-    private void translate(String q, String from, String to, String appKey, int salt, String sign) {
+    @Override
+    public void translate(String q, String from, String to, String appKey, int salt, String sign) {
         TRRetrofit.getInstance().getmPRService().getYoudaoTras(q, from, to, appKey, salt, sign)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -83,7 +84,8 @@ public class ListenClipboardService extends Service implements View.OnClickListe
                     @Override
                     public void onNext(YouDaoBean youDaoBean) {
                         if (youDaoBean != null) {
-                            showPopView(youDaoBean);
+                            if (Utils.getBoolean(Constant.showPop, true))
+                                showResult(youDaoBean);
                         } else {
                             Utils.t(R.string.noresult);
                         }
@@ -91,7 +93,8 @@ public class ListenClipboardService extends Service implements View.OnClickListe
                 });
     }
 
-    private void showPopView(YouDaoBean youDaoBean) {
+    @Override
+    public void showResult(YouDaoBean youDaoBean) {
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         if (tipView == null) {
             tipView = new TipView(this);
@@ -144,7 +147,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
                             Utils.t(R.string.cant);
                             return;
                         }
-                        translate(q, "en", "zh_CHS", appkey, 2, Utils.md5(appkey + q + 2 + "LvFWm7lDmGNJLu3fRSB7f5PmlkrIlxxR"));
+                        translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                     } catch (Exception e) {
                         Utils.t(R.string.cant);
                         e.printStackTrace();

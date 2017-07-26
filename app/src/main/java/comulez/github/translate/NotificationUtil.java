@@ -23,7 +23,7 @@ public class NotificationUtil {
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentTitle(context.getString(R.string.app_name));
         builder.setContentText("点击打开翻译");
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.ic_launcher);
         builder.setColor(Color.rgb(121, 85, 72));
         builder.setPriority(Notification.PRIORITY_MIN);
         builder.setOngoing(true);
@@ -50,7 +50,7 @@ public class NotificationUtil {
                 .setAutoCancel(true)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setWhen(System.currentTimeMillis())
                 .setOngoing(true);
         mNotification = builder.build();
