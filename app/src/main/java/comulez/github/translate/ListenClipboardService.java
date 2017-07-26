@@ -68,7 +68,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
 
     private void onRemove() {
         if (mWindowManager != null && tipView != null && tipView.getParent() != null) {
-            mWindowManager.removeView(tipView);
+            tipView.hideWithAnim(mWindowManager, tipView);
         }
     }
 
@@ -109,6 +109,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
         }
         tipView.update(youDaoBean);
         mWindowManager.addView(tipView, getPopViewParams());
+        tipView.startWithAnim();
         Message msg = Message.obtain();
         msg.what = Constant.removePop;
         handler.sendMessageDelayed(msg, Utils.getInt(Constant.SHOW_DURATION, 3000));

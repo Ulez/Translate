@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -130,7 +134,7 @@ public class Utils {
 
 
     public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =(InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
@@ -195,5 +199,13 @@ public class Utils {
             stringBuilder.append(s + "\n");
         }
         return stringBuilder.toString();
+    }
+
+    /**
+     * 设置输入框的光标到末尾
+     */
+    public static final void setEditTextSelectionToEnd(EditText editText) {
+        Editable editable = editText.getEditableText();
+        Selection.setSelection((Spannable) editable, editable.toString().length());
     }
 }

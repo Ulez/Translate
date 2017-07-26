@@ -1,10 +1,13 @@
 package comulez.github.translate;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,6 +34,7 @@ public class TipView extends LinearLayout {
     private RelativeLayout mLlSrc;
     private View mContentView;
     private YouDaoBean youDao;
+    private int DURATION_TIME = 400;
 
     public TipView(Context context) {
         this(context, null);
@@ -78,9 +82,44 @@ public class TipView extends LinearLayout {
             tvWord.setText(youDaoBean.getQuery());
             tvResult.setText(youDaoBean.getTranslation().get(0));
             tvPronounce.setText("[" + youDaoBean.getBasic().getPhonetic() + "]");
+            startWithAnim();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void startWithAnim() {
+        ObjectAnimator translationAnim = ObjectAnimator.ofFloat(mContentView, "translationY", -700, 0);
+        translationAnim.setDuration(DURATION_TIME);
+        translationAnim.start();
+    }
+
+    public void hideWithAnim(final WindowManager mWindowManager, final TipView tipView) {
+        ObjectAnimator translationAnim = ObjectAnimator.ofFloat(mContentView, "translationY", 0, -700);
+        translationAnim.setDuration(DURATION_TIME);
+        translationAnim.start();
+        translationAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mWindowManager.removeView(tipView);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                mWindowManager.removeView(tipView);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 
     private void resetText() {
