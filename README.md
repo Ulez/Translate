@@ -6,7 +6,7 @@
 
 
 ## apk
-* [U译.apk](https://github.com/Ulez/Translate/blob/master/apk/U译.apk)
+* [U译.apk](https://github.com/Ulez/Translate/blob/master/apk/U译.apk?raw=true)
 
 
 推荐想学英语的同学一款APP：quora，外国版知乎，不翻墙也能用。可以长长见识顺便学学英语。
