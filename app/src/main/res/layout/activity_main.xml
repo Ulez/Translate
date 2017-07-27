@@ -69,15 +69,6 @@
         android:layout_below="@id/tv_result"
         android:layout_marginLeft="@dimen/leftmargin"
         android:textColor="@android:color/white" />
-
-    <TextView
-        android:id="@+id/tv_synonyms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_Explains"
-        android:layout_marginLeft="@dimen/leftmargin"
-        android:textColor="@android:color/white" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"

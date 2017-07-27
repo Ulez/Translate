@@ -32,6 +32,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="@dimen/leftmargin2"
         android:layout_marginTop="@dimen/leftmargin2"
+        android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible">
 
@@ -40,7 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
             android:layout_toEndOf="@+id/tv_word"
             android:textColor="@android:color/white"
             tools:text="[wɑ:t]" />
@@ -50,7 +50,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/leftmargin"
             android:background="@null"
             android:gravity="left"
             android:includeFontPadding="false"
@@ -75,26 +74,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_pop_src"
-        android:layout_marginLeft="@dimen/leftmargin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/leftmargin2"
+        android:layout_marginRight="@dimen/leftmargin2"
         android:layout_marginTop="@dimen/leftmargin2"
-        android:textColor="@android:color/white" />
-
-    <TextView
-        android:id="@+id/tv_synonyms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_Explains"
-        android:layout_marginLeft="@dimen/leftmargin"
+        android:text="@string/app_name"
         android:textColor="@android:color/white" />
 
     <ImageView
         android:id="@+id/im_hide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_synonyms"
+        android:layout_below="@+id/tv_Explains"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:src="@drawable/hide"
         android:visibility="gone" />
 </RelativeLayout>

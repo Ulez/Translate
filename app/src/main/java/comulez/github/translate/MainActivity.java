@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
     TextView tvResult;
     @Bind(R.id.tv_Explains)
     TextView tvExplains;
-    @Bind(R.id.tv_synonyms)
-    TextView tvSynonyms;
     @Bind(R.id.button)
     Button button;
     @Bind(R.id.pop_view_content_view)
@@ -162,13 +160,11 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
         String phonetic = youDaoBean.getBasic().getPhonetic();
         if (!TextUtils.isEmpty(phonetic))
             tvPronounce.setText("[" + phonetic + "]");
-        tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains()));
-        tvSynonyms.setText(Utils.getALl2(youDao.getWeb()));
+        tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains(), youDao.getWeb()));
     }
 
     private void resetText() {
         tvExplains.setText("");
-        tvSynonyms.setText("");
         tvResult.setText("");
         tvPronounce.setText("");
     }

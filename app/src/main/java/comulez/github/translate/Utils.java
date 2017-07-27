@@ -180,23 +180,18 @@ public class Utils {
         sp.edit().clear().commit();
     }
 
-
-    public static String getALl2(List<YouDaoBean.WebBean> webBeanList) {
-        if (webBeanList == null || webBeanList.size() <= 0)
-            return "";
-        StringBuilder stringBuilder = new StringBuilder();
-        for (YouDaoBean.WebBean webBean : webBeanList) {
-            stringBuilder.append(webBean.getKey() + ":" + webBean.getValue() + "\n");
-        }
-        return stringBuilder.toString();
-    }
-
-    public static String getALl(List<String> explains) {
+    public static String getALl(List<String> explains, List<YouDaoBean.WebBean> webBeanList) {
         if (explains == null || explains.size() <= 0)
             return "";
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : explains) {
             stringBuilder.append(s + "\n");
+        }
+        if (webBeanList == null || webBeanList.size() <= 0)
+            return stringBuilder.toString();
+        stringBuilder.append("\n");
+        for (YouDaoBean.WebBean webBean : webBeanList) {
+            stringBuilder.append(webBean.getKey() + ":" + webBean.getValue() + "\n");
         }
         return stringBuilder.toString();
     }

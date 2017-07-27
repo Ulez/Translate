@@ -27,7 +27,6 @@ public class TipView extends LinearLayout {
     private WeakReference<ListenClipboardService> serviceWeakReference;
     private static final String TAG = "TipView";
     private TextView tvExplains;
-    private TextView tvSynonyms;
     private TextView tvWord;
     private TextView tvResult;
     private TextView tvPronounce;
@@ -54,7 +53,6 @@ public class TipView extends LinearLayout {
         tvWord = (TextView) mContainer.findViewById(R.id.tv_word);
         tvResult = (TextView) mContainer.findViewById(R.id.tv_result);
         tvPronounce = (TextView) mContainer.findViewById(R.id.tv_pronounce);
-        tvSynonyms = (TextView) mContainer.findViewById(R.id.tv_synonyms);
         tvExplains = (TextView) mContainer.findViewById(R.id.tv_Explains);
         imHide = (ImageView) mContainer.findViewById(R.id.im_hide);
         mContainer.findViewById(R.id.ll_pop_src).setOnClickListener(new OnClickListener() {
@@ -124,13 +122,11 @@ public class TipView extends LinearLayout {
 
     private void resetText() {
         tvExplains.setText("");
-        tvSynonyms.setText("");
         tvWord.setText("");
         tvResult.setText("");
         tvPronounce.setText("");
 
         imHide.setVisibility(GONE);
-        tvSynonyms.setVisibility(GONE);
         tvExplains.setVisibility(GONE);
     }
 
@@ -140,10 +136,8 @@ public class TipView extends LinearLayout {
                 if (serviceWeakReference != null && serviceWeakReference.get() != null)
                     serviceWeakReference.get().cancelHide();
                 tvExplains.setVisibility(VISIBLE);
-                tvSynonyms.setVisibility(VISIBLE);
                 imHide.setVisibility(VISIBLE);
-                tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains()));
-                tvSynonyms.setText(Utils.getALl2(youDao.getWeb()));
+                tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains(), youDao.getWeb()));
             }
         } catch (Exception e) {
             e.printStackTrace();
