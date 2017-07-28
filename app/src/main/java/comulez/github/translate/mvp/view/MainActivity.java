@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.mvp.view;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -21,12 +21,16 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import comulez.github.translate.utils.Constant;
+import comulez.github.translate.R;
+import comulez.github.translate.utils.Utils;
+import comulez.github.translate.beans.YouDaoBean;
+import comulez.github.translate.mvp.ListenClipboardService;
+import comulez.github.translate.mvp.presenter.TranslatePresenter;
 
-import static comulez.github.translate.Constant.showPop;
+import static comulez.github.translate.utils.Constant.showPop;
 
-public class MainActivity extends AppCompatActivity implements ITranslate {
+public class MainActivity extends AppCompatActivity implements ITranslateView {
 
     private static String TAG = "MainActivity";
     @Bind(R.id.tv_word)
@@ -54,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
-    private YouDaoBean youDao;
+    private TranslatePresenter presenter;
 
 
     @Override
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        presenter = new TranslatePresenter(this);
         intent = new Intent(this, ListenClipboardService.class);
         startService(intent);
         askForPermission();
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
     /**
      * 请求用户给予悬浮窗的权限
      */
-    public void askForPermission() {
+    private void askForPermission() {
         if (Utils.isM() && !Utils.getBoolean(Constant.hasPermission, false)) {
             new AlertDialog.Builder(this).setMessage(getString(R.string.tip1))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -129,44 +134,35 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
     }
 
     @Override
-    public void translate(String q, String from, String to, String appKey, int salt, String sign) {
-        Utils.hideSoftKeyboard(this);
-        tvResult.setText(getString(R.string.loading));
-        TRRetrofit.getInstance().getmPRService().getYoudaoTras(q, from, to, appKey, salt, sign)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new PbSubscriber<YouDaoBean>() {
-                    @Override
-                    public void onNext(YouDaoBean youDaoBean) {
-                        if (youDaoBean != null) {
-                            try {
-                                showResult(youDaoBean);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            tvResult.setText(getString(R.string.noresult));
-                        }
-                    }
-                });
+    public void showResult(YouDaoBean youDaoBean) {
+        try {
+            if (youDaoBean != null) {
+                resetText();
+                tvResult.setText(youDaoBean.getTranslation().get(0));
+                String phonetic = youDaoBean.getBasic().getPhonetic();
+                if (!TextUtils.isEmpty(phonetic))
+                    tvPronounce.setText("[" + phonetic + "]");
+                tvExplains.setText(Utils.getALl(youDaoBean.getBasic().getExplains(), youDaoBean.getWeb()));
+            } else {
+                tvResult.setText(getString(R.string.noresult));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void showResult(YouDaoBean youDaoBean) {
-        youDao = youDaoBean;
-        resetText();
-        tvResult.setText(youDaoBean.getTranslation().get(0));
-        String phonetic = youDaoBean.getBasic().getPhonetic();
-        if (!TextUtils.isEmpty(phonetic))
-            tvPronounce.setText("[" + phonetic + "]");
-        tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains(), youDao.getWeb()));
-    }
-
-    private void resetText() {
+    public void resetText() {
         tvExplains.setText("");
         tvResult.setText("");
         tvPronounce.setText("");
+    }
+
+    @Override
+    public void showLoading() {
+        Utils.hideSoftKeyboard(this);
+        tvResult.setText(getString(R.string.loading));
+        resetText();
     }
 
 
@@ -177,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements ITranslate {
                 break;
             case R.id.iv_trans:
                 String q = tvWord.getText().toString();
-                translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                presenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                 break;
             case R.id.button:
                 stopService(intent);

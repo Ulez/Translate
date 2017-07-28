@@ -14,8 +14,9 @@ import java.util.List;
  */
 
 
-public class MyApplication extends Application {
+public class UApplication extends Application {
     private static Context context;
+
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();

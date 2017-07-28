@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.mvp;
 
 import android.app.Service;
 import android.content.ClipboardManager;
@@ -18,10 +18,17 @@ import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import comulez.github.translate.utils.Constant;
+import comulez.github.translate.R;
+import comulez.github.translate.widget.TipView;
+import comulez.github.translate.utils.Utils;
+import comulez.github.translate.beans.YouDaoBean;
+import comulez.github.translate.mvp.presenter.TranslatePresenter;
+import comulez.github.translate.mvp.view.ITranslateView;
 
-public class ListenClipboardService extends Service implements View.OnClickListener, ITranslate {
+import static comulez.github.translate.utils.Constant.showPop;
+
+public class ListenClipboardService extends Service implements View.OnClickListener, ITranslateView {
 
     private ClipboardManager clipboard;
 
@@ -30,6 +37,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
     private WindowManager mWindowManager;
     private TipView tipView;
     private ClipboardManager.OnPrimaryClipChangedListener listener;
+    private TranslatePresenter presenter;
 
     @Override
     public void onClick(View v) {
@@ -76,26 +84,10 @@ public class ListenClipboardService extends Service implements View.OnClickListe
     }
 
     @Override
-    public void translate(String q, String from, String to, String appKey, int salt, String sign) {
-        TRRetrofit.getInstance().getmPRService().getYoudaoTras(q, from, to, appKey, salt, sign)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new PbSubscriber<YouDaoBean>() {
-                    @Override
-                    public void onNext(YouDaoBean youDaoBean) {
-                        if (youDaoBean != null) {
-                            if (Utils.getBoolean(Constant.showPop, true))
-                                showResult(youDaoBean);
-                        } else {
-                            Utils.t(R.string.noresult);
-                        }
-                    }
-                });
-    }
-
-    @Override
     public void showResult(YouDaoBean youDaoBean) {
+        Log.e(TAG, "service showResult");
+        if (!Utils.getBoolean(showPop, true))
+            return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
                 Utils.t(youDaoBean.getTranslation().get(0));
@@ -107,8 +99,8 @@ public class ListenClipboardService extends Service implements View.OnClickListe
             tipView = new TipView(this);
             tipView.setOnMoreClickListener(this);
         }
-        tipView.update(youDaoBean);
         try {
+            tipView.update(youDaoBean);
             mWindowManager.addView(tipView, getPopViewParams());
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,6 +109,16 @@ public class ListenClipboardService extends Service implements View.OnClickListe
         Message msg = Message.obtain();
         msg.what = Constant.removePop;
         handler.sendMessageDelayed(msg, Utils.getInt(Constant.SHOW_DURATION, 3000));
+    }
+
+    @Override
+    public void resetText() {
+
+    }
+
+    @Override
+    public void showLoading() {
+
     }
 
     private WindowManager.LayoutParams getPopViewParams() {
@@ -148,6 +150,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
         Log.e(TAG, "onCreate");
         handler = new MyHandler(this);
         clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        presenter = new TranslatePresenter(this);
         listener = new ClipboardManager.OnPrimaryClipChangedListener() {
             @Override
             public void onPrimaryClipChanged() {
@@ -159,7 +162,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
                             Utils.t(R.string.cant);
                             return;
                         }
-                        translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                        presenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                     } catch (Exception e) {
                         Utils.t(R.string.cant);
                         e.printStackTrace();

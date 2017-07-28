@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.net;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;

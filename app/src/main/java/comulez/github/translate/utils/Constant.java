@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.utils;
 
 /**
  * Created by Ulez on 2017/7/25.

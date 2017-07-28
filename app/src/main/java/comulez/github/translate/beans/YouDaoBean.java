@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.beans;
 
 import android.os.Parcel;
 import android.os.Parcelable;

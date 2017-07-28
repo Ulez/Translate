@@ -1,9 +1,11 @@
-package comulez.github.translate;
+package comulez.github.translate.rx;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import comulez.github.translate.exception.ApiExceptionFactory;
+import comulez.github.translate.utils.Utils;
 import rx.Subscriber;
 
 /**

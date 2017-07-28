@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.net;
 
 import java.util.concurrent.TimeUnit;
 

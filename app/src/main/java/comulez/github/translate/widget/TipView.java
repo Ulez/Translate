@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.widget;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -12,6 +12,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+
+import comulez.github.translate.R;
+import comulez.github.translate.beans.YouDaoBean;
+import comulez.github.translate.mvp.ListenClipboardService;
+import comulez.github.translate.utils.Utils;
 
 /**
  * Created by Ulez on 2017/7/25.
@@ -134,6 +139,7 @@ public class TipView extends LinearLayout {
                 tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains(), youDao.getWeb()));
             }
         } catch (Exception e) {
+            tvExplains.setText(getContext().getString(R.string.no_more_info));
             e.printStackTrace();
         }
     }

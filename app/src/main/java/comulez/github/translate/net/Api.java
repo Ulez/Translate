@@ -1,5 +1,6 @@
-package comulez.github.translate;
+package comulez.github.translate.net;
 
+import comulez.github.translate.beans.YouDaoBean;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;

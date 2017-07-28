@@ -1,4 +1,4 @@
-package comulez.github.translate;
+package comulez.github.translate.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
+import comulez.github.translate.UApplication;
+import comulez.github.translate.beans.YouDaoBean;
+
 /**
  * Created by Ulez on 2017/7/24.
  * Email：lcy1532110757@gmail.com
@@ -25,7 +28,7 @@ import java.util.Map;
 
 public class Utils {
     private static long lastTime = 0;
-    private static SharedPreferences sp = MyApplication.getContext().getSharedPreferences("permissions", Context.MODE_PRIVATE);
+    private static SharedPreferences sp = UApplication.getContext().getSharedPreferences("permissions", Context.MODE_PRIVATE);
 
     /**
      * 生成32位MD5摘要
@@ -129,7 +132,7 @@ public class Utils {
     }
 
     public static void t(String m) {
-        Toast.makeText(MyApplication.getContext(), m, Toast.LENGTH_SHORT).show();
+        Toast.makeText(UApplication.getContext(), m, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -139,11 +142,11 @@ public class Utils {
     }
 
     public static void tL(String m) {
-        Toast.makeText(MyApplication.getContext(), m, Toast.LENGTH_LONG).show();
+        Toast.makeText(UApplication.getContext(), m, Toast.LENGTH_LONG).show();
     }
 
     public static void t(int sId) {
-        Toast.makeText(MyApplication.getContext(), MyApplication.getContext().getString(sId), Toast.LENGTH_LONG).show();
+        Toast.makeText(UApplication.getContext(), UApplication.getContext().getString(sId), Toast.LENGTH_LONG).show();
     }
 
     public static boolean hasOverlayPermission() {
