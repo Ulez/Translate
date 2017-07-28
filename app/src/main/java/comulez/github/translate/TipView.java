@@ -4,11 +4,9 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +21,6 @@ import java.lang.ref.WeakReference;
 
 public class TipView extends LinearLayout {
 
-    private ImageView imHide;
     private WeakReference<ListenClipboardService> serviceWeakReference;
     private static final String TAG = "TipView";
     private TextView tvExplains;
@@ -34,6 +31,7 @@ public class TipView extends LinearLayout {
     private View mContentView;
     private YouDaoBean youDao;
     private int DURATION_TIME = 400;
+    private boolean expand = false;
 
     public TipView(Context context) {
         this(context, null);
@@ -54,18 +52,18 @@ public class TipView extends LinearLayout {
         tvResult = (TextView) mContainer.findViewById(R.id.tv_result);
         tvPronounce = (TextView) mContainer.findViewById(R.id.tv_pronounce);
         tvExplains = (TextView) mContainer.findViewById(R.id.tv_Explains);
-        imHide = (ImageView) mContainer.findViewById(R.id.im_hide);
-        mContainer.findViewById(R.id.ll_pop_src).setOnClickListener(new OnClickListener() {
+        mContainer.findViewById(R.id.pop_view_content_view).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                addMore();
-            }
-        });
-        imHide.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (serviceWeakReference != null && serviceWeakReference.get() != null)
-                    serviceWeakReference.get().hide();
+                if (!expand) {
+                    expand = true;
+                    addMore();
+                } else {
+                    if (serviceWeakReference != null && serviceWeakReference.get() != null) {
+                        expand = false;
+                        serviceWeakReference.get().hide();
+                    }
+                }
             }
         });
         mLlSrc = (RelativeLayout) mContainer.findViewById(R.id.ll_pop_src);
@@ -76,7 +74,6 @@ public class TipView extends LinearLayout {
         try {
             youDao = youDaoBean;
             resetText();
-            Log.e(TAG, "update=" + youDaoBean.getQuery() + youDaoBean.getTranslation().get(0));
             tvWord.setText(youDaoBean.getQuery());
             tvResult.setText(youDaoBean.getTranslation().get(0));
             tvPronounce.setText("[" + youDaoBean.getBasic().getPhonetic() + "]");
@@ -85,7 +82,6 @@ public class TipView extends LinearLayout {
             e.printStackTrace();
         }
     }
-
 
     public void startWithAnim() {
         ObjectAnimator translationAnim = ObjectAnimator.ofFloat(mContentView, "translationY", -700, 0);
@@ -126,7 +122,6 @@ public class TipView extends LinearLayout {
         tvResult.setText("");
         tvPronounce.setText("");
 
-        imHide.setVisibility(GONE);
         tvExplains.setVisibility(GONE);
     }
 
@@ -136,7 +131,6 @@ public class TipView extends LinearLayout {
                 if (serviceWeakReference != null && serviceWeakReference.get() != null)
                     serviceWeakReference.get().cancelHide();
                 tvExplains.setVisibility(VISIBLE);
-                imHide.setVisibility(VISIBLE);
                 tvExplains.setText(Utils.getALl(youDao.getBasic().getExplains(), youDao.getWeb()));
             }
         } catch (Exception e) {

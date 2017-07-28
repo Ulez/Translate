@@ -15,10 +15,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            def outputPathName = "apk/U译.apk"
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
-                    output.outputFile = new File(outputPathName)
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def fileName = "U译.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
                 }
             }
         }

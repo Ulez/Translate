@@ -108,7 +108,11 @@ public class ListenClipboardService extends Service implements View.OnClickListe
             tipView.setOnMoreClickListener(this);
         }
         tipView.update(youDaoBean);
-        mWindowManager.addView(tipView, getPopViewParams());
+        try {
+            mWindowManager.addView(tipView, getPopViewParams());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         tipView.startWithAnim();
         Message msg = Message.obtain();
         msg.what = Constant.removePop;

@@ -32,6 +32,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="@dimen/leftmargin2"
         android:layout_marginTop="@dimen/leftmargin2"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible">
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/tv_word"
-            android:textColor="@android:color/white"
+            android:textColor="@color/md_grey_400"
             tools:text="[wɑ:t]" />
 
         <TextView
@@ -50,11 +51,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/leftmargin2"
+            android:layout_marginRight="@dimen/leftmargin2"
             android:background="@null"
             android:gravity="left"
             android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/md_blue_grey_500"
+            android:text="@string/app_name"
+            android:textColor="@color/md_white"
             android:textSize="18sp" />
 
         <TextView
@@ -62,8 +65,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/leftmargin2"
+            android:layout_marginRight="@dimen/leftmargin2"
             android:layout_toEndOf="@id/tv_pronounce"
-            android:textColor="@android:color/white"
+            android:textColor="@color/md_white"
             android:visibility="visible"
             tools:text="查词中..."
             tools:visibility="visible" />
@@ -80,15 +85,5 @@
         android:layout_marginTop="@dimen/leftmargin2"
         android:text="@string/app_name"
         android:textColor="@android:color/white" />
-
-    <ImageView
-        android:id="@+id/im_hide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_Explains"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/hide"
-        android:visibility="gone" />
 </RelativeLayout>
 
