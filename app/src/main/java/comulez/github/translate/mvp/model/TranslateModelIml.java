@@ -1,5 +1,6 @@
 package comulez.github.translate.mvp.model;
 
+import comulez.github.translate.exception.ApiExceptionFactory;
 import comulez.github.translate.mvp.DataListener;
 import comulez.github.translate.rx.PbSubscriber;
 import comulez.github.translate.net.TRRetrofit;
@@ -21,6 +22,12 @@ public class TranslateModelIml implements ITranslateModel {
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new PbSubscriber<YouDaoBean>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        listener.onError(ApiExceptionFactory.getApiException(e).getDisplayMessage());
+                    }
+
                     @Override
                     public void onNext(YouDaoBean youDaoBean) {
                         listener.onResult(youDaoBean);

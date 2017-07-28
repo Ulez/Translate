@@ -15,4 +15,6 @@ public interface ITranslateView {
     void resetText();
 
     void showLoading();
+
+    void onError(String msg);
 }

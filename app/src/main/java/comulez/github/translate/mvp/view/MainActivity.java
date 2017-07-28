@@ -134,6 +134,19 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
     }
 
     @Override
+    public void showLoading() {
+        Utils.hideSoftKeyboard(this);
+        tvResult.setText(getString(R.string.loading));
+        tvExplains.setText("");
+        tvPronounce.setText("");
+    }
+
+    @Override
+    public void onError(String msg) {
+        tvResult.setText(msg);
+    }
+
+    @Override
     public void showResult(YouDaoBean youDaoBean) {
         try {
             if (youDaoBean != null) {
@@ -156,13 +169,6 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
         tvExplains.setText("");
         tvResult.setText("");
         tvPronounce.setText("");
-    }
-
-    @Override
-    public void showLoading() {
-        Utils.hideSoftKeyboard(this);
-        tvResult.setText(getString(R.string.loading));
-        resetText();
     }
 
 

@@ -28,6 +28,11 @@ public class TranslatePresenter {
             public void onResult(YouDaoBean youDaoBean) {
                 translateView.showResult(youDaoBean);
             }
+
+            @Override
+            public void onError(String displayMessage) {
+                translateView.onError(displayMessage);
+            }
         });
     }
 }

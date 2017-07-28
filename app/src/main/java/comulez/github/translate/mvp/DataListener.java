@@ -10,4 +10,6 @@ import comulez.github.translate.beans.YouDaoBean;
 
 public interface DataListener {
     void onResult(YouDaoBean youDaoBean);
+
+    void onError(String displayMessage);
 }

@@ -121,6 +121,11 @@ public class ListenClipboardService extends Service implements View.OnClickListe
 
     }
 
+    @Override
+    public void onError(String msg) {
+
+    }
+
     private WindowManager.LayoutParams getPopViewParams() {
         int w = WindowManager.LayoutParams.MATCH_PARENT;
         int h = WindowManager.LayoutParams.WRAP_CONTENT;
