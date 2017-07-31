@@ -1,6 +1,5 @@
 package comulez.github.translate.mvp;
 
-import android.app.Service;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -18,17 +17,18 @@ import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
-import comulez.github.translate.utils.Constant;
 import comulez.github.translate.R;
-import comulez.github.translate.widget.TipView;
-import comulez.github.translate.utils.Utils;
 import comulez.github.translate.beans.YouDaoBean;
+import comulez.github.translate.mvp.base.MvpBaseService;
 import comulez.github.translate.mvp.presenter.TranslatePresenter;
 import comulez.github.translate.mvp.view.ITranslateView;
+import comulez.github.translate.utils.Constant;
+import comulez.github.translate.utils.Utils;
+import comulez.github.translate.widget.TipView;
 
 import static comulez.github.translate.utils.Constant.showPop;
 
-public class ListenClipboardService extends Service implements View.OnClickListener, ITranslateView {
+public class ListenClipboardService extends MvpBaseService<ITranslateView, TranslatePresenter> implements View.OnClickListener, ITranslateView {
 
     private ClipboardManager clipboard;
 
@@ -37,7 +37,6 @@ public class ListenClipboardService extends Service implements View.OnClickListe
     private WindowManager mWindowManager;
     private TipView tipView;
     private ClipboardManager.OnPrimaryClipChangedListener listener;
-    private TranslatePresenter presenter;
 
     @Override
     public void onClick(View v) {
@@ -85,7 +84,7 @@ public class ListenClipboardService extends Service implements View.OnClickListe
 
     @Override
     public void showResult(YouDaoBean youDaoBean) {
-        Log.e(TAG, "service showResult");
+        Log.i(TAG, "service showResult");
         if (!Utils.getBoolean(showPop, true))
             return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -152,22 +151,21 @@ public class ListenClipboardService extends Service implements View.OnClickListe
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(TAG, "onCreate");
+        Log.i(TAG, "onCreate");
         handler = new MyHandler(this);
         clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        presenter = new TranslatePresenter(this);
         listener = new ClipboardManager.OnPrimaryClipChangedListener() {
             @Override
             public void onPrimaryClipChanged() {
                 if (Utils.compareTime(System.currentTimeMillis())) {
-                    Log.e(TAG, "onPrimaryClipChanged");
+                    Log.i(TAG, "onPrimaryClipChanged");
                     try {
                         String q = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
                         if (TextUtils.isEmpty(q)) {
                             Utils.t(R.string.cant);
                             return;
                         }
-                        presenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                        mPresenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                     } catch (Exception e) {
                         Utils.t(R.string.cant);
                         e.printStackTrace();
@@ -180,19 +178,19 @@ public class ListenClipboardService extends Service implements View.OnClickListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG, "onStartCommand");
+        Log.i(TAG, "onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e(TAG, "onBind");
+        Log.i(TAG, "onBind");
         return null;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.e(TAG, "onUnbind");
+        Log.i(TAG, "onUnbind");
         return super.onUnbind(intent);
     }
 
@@ -200,7 +198,13 @@ public class ListenClipboardService extends Service implements View.OnClickListe
     public void onDestroy() {
         if (clipboard != null && listener != null)
             clipboard.removePrimaryClipChangedListener(listener);
-        Log.e(TAG, "onDestroy ListenClipboardService");
+        Log.i(TAG, "onDestroy ListenClipboardService");
+        mPresenter.detachView();
         super.onDestroy();
+    }
+
+    @Override
+    protected TranslatePresenter createPresenter() {
+        return new TranslatePresenter();
     }
 }

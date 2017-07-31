@@ -1,5 +1,6 @@
 package comulez.github.translate.mvp.presenter;
 
+import comulez.github.translate.mvp.base.BasePresenter;
 import comulez.github.translate.mvp.DataListener;
 import comulez.github.translate.beans.YouDaoBean;
 import comulez.github.translate.mvp.model.TranslateModelIml;
@@ -12,26 +13,24 @@ import comulez.github.translate.mvp.view.ITranslateView;
  */
 
 
-public class TranslatePresenter {
-    private ITranslateView translateView;
+public class TranslatePresenter extends BasePresenter<ITranslateView> {
     private final TranslateModelIml modelIml;
 
-    public TranslatePresenter(ITranslateView translateView) {
+    public TranslatePresenter() {
         modelIml = new TranslateModelIml();
-        this.translateView = translateView;
     }
 
     public void translate(String q, String from, String to, String appKey, int salt, String sign) {
-        translateView.showLoading();
+        getView().showLoading();
         modelIml.translate(q, from, to, appKey, salt, sign, new DataListener() {
             @Override
             public void onResult(YouDaoBean youDaoBean) {
-                translateView.showResult(youDaoBean);
+                getView().showResult(youDaoBean);
             }
 
             @Override
             public void onError(String displayMessage) {
-                translateView.onError(displayMessage);
+                getView().onError(displayMessage);
             }
         });
     }

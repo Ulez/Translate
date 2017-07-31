@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -21,16 +20,17 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import comulez.github.translate.utils.Constant;
 import comulez.github.translate.R;
-import comulez.github.translate.utils.Utils;
 import comulez.github.translate.beans.YouDaoBean;
 import comulez.github.translate.mvp.ListenClipboardService;
+import comulez.github.translate.mvp.base.MvpBaseActivity;
 import comulez.github.translate.mvp.presenter.TranslatePresenter;
+import comulez.github.translate.utils.Constant;
+import comulez.github.translate.utils.Utils;
 
 import static comulez.github.translate.utils.Constant.showPop;
 
-public class MainActivity extends AppCompatActivity implements ITranslateView {
+public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePresenter> implements ITranslateView {
 
     private static String TAG = "MainActivity";
     @Bind(R.id.tv_word)
@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
-    private TranslatePresenter presenter;
 
 
     @Override
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        presenter = new TranslatePresenter(this);
+
         intent = new Intent(this, ListenClipboardService.class);
         startService(intent);
         askForPermission();
@@ -134,6 +133,11 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
     }
 
     @Override
+    protected TranslatePresenter createPresenter() {
+        return new TranslatePresenter();
+    }
+
+    @Override
     public void showLoading() {
         Utils.hideSoftKeyboard(this);
         tvResult.setText(getString(R.string.loading));
@@ -179,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
                 break;
             case R.id.iv_trans:
                 String q = tvWord.getText().toString();
-                presenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                mPresenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                 break;
             case R.id.button:
                 stopService(intent);

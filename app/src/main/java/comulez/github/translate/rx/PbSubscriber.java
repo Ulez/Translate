@@ -38,7 +38,7 @@ public abstract class PbSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onError(Throwable e) {
-        Log.e(TAG, e.toString());
+        Log.i(TAG, e.toString());
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Utils.t(ApiExceptionFactory.getApiException(e).getDisplayMessage());
