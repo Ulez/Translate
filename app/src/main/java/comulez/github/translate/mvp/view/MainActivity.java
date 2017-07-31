@@ -1,15 +1,21 @@
 package comulez.github.translate.mvp.view;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,18 +29,16 @@ import butterknife.OnClick;
 import comulez.github.translate.R;
 import comulez.github.translate.beans.YouDaoBean;
 import comulez.github.translate.mvp.ListenClipboardService;
-import comulez.github.translate.mvp.base.MvpBaseActivity;
-import comulez.github.translate.mvp.presenter.TranslatePresenter;
 import comulez.github.translate.utils.Constant;
 import comulez.github.translate.utils.Utils;
 
 import static comulez.github.translate.utils.Constant.showPop;
 
-public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePresenter> implements ITranslateView {
+public class MainActivity extends AppCompatActivity implements ITranslateView {
 
     private static String TAG = "MainActivity";
-    @Bind(R.id.tv_word)
-    EditText tvWord;
+    @Bind(R.id.et_word)
+    EditText etWord;
     @Bind(R.id.iv_trans)
     ImageView ivTrans;
     @Bind(R.id.tv_pronounce)
@@ -59,6 +63,8 @@ public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePrese
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
+    private ListenClipboardService clipboardService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +74,25 @@ public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePrese
 
         intent = new Intent(this, ListenClipboardService.class);
         startService(intent);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         askForPermission();
     }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.i("lcy", "onServiceConnected");
+            ListenClipboardService.LocalBinder binder = (ListenClipboardService.LocalBinder) service;
+            clipboardService = binder.getServiceInstance();
+            clipboardService.attachAct(MainActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            Log.i("lcy", "onServiceDisconnected");
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -130,11 +153,8 @@ public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePrese
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    protected TranslatePresenter createPresenter() {
-        return new TranslatePresenter();
+        Log.i(TAG, "onDestroy -- unbindService");
+        unbindService(mConnection);
     }
 
     @Override
@@ -155,6 +175,8 @@ public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePrese
         try {
             if (youDaoBean != null) {
                 resetText();
+                etWord.setText(youDaoBean.getQuery());
+                Utils.setEditTextSelectionToEnd(etWord);
                 tvResult.setText(youDaoBean.getTranslation().get(0));
                 String phonetic = youDaoBean.getBasic().getPhonetic();
                 if (!TextUtils.isEmpty(phonetic))
@@ -176,14 +198,14 @@ public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePrese
     }
 
 
-    @OnClick({R.id.tv_word, R.id.iv_trans, R.id.button, R.id.button_per, R.id.button_clean})
+    @OnClick({R.id.et_word, R.id.iv_trans, R.id.button, R.id.button_per, R.id.button_clean})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_word:
+            case R.id.et_word:
                 break;
             case R.id.iv_trans:
-                String q = tvWord.getText().toString();
-                mPresenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                String q = etWord.getText().toString();
+                clipboardService.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                 break;
             case R.id.button:
                 stopService(intent);
@@ -193,7 +215,7 @@ public class MainActivity extends MvpBaseActivity<ITranslateView, TranslatePrese
                 requestPermission();
                 break;
             case R.id.button_clean:
-                tvWord.setText("");
+                etWord.setText("");
                 resetText();
                 break;
         }

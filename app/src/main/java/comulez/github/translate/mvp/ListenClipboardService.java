@@ -1,9 +1,11 @@
 package comulez.github.translate.mvp;
 
+import android.app.Activity;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -37,6 +39,18 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
     private WindowManager mWindowManager;
     private TipView tipView;
     private ClipboardManager.OnPrimaryClipChangedListener listener;
+    private final IBinder mBinder = new LocalBinder();
+    private WeakReference<ITranslateView> activity;
+
+    public class LocalBinder extends Binder {
+        public ListenClipboardService getServiceInstance() {
+            return ListenClipboardService.this;
+        }
+    }
+
+    public void attachAct(Activity activity) {
+        this.activity = new WeakReference(activity);
+    }
 
     @Override
     public void onClick(View v) {
@@ -82,11 +96,19 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
     public ListenClipboardService() {
     }
 
+    public boolean attachedAct() {
+        return activity != null && activity.get() != null;
+    }
+
     @Override
     public void showResult(YouDaoBean youDaoBean) {
         Log.i(TAG, "service showResult");
-        if (!Utils.getBoolean(showPop, true))
+        if (attachedAct()) {
+            activity.get().showResult(youDaoBean);
+        }
+        if (!Utils.getBoolean(showPop, true)) {
             return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
                 Utils.t(youDaoBean.getTranslation().get(0));
@@ -112,17 +134,20 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
 
     @Override
     public void resetText() {
-
+        if (attachedAct())
+            activity.get().resetText();
     }
 
     @Override
     public void showLoading() {
-
+        if (attachedAct())
+            activity.get().showLoading();
     }
 
     @Override
     public void onError(String msg) {
-
+        if (attachedAct())
+            activity.get().onError(msg);
     }
 
     private WindowManager.LayoutParams getPopViewParams() {
@@ -165,7 +190,7 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
                             Utils.t(R.string.cant);
                             return;
                         }
-                        mPresenter.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                        translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                     } catch (Exception e) {
                         Utils.t(R.string.cant);
                         e.printStackTrace();
@@ -174,6 +199,11 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
             }
         };
         clipboard.addPrimaryClipChangedListener(listener);
+    }
+
+    public void translate(String q, String from, String to, String appKey, int salt, String sign) {
+        Log.i(TAG, "translate");
+        mPresenter.translate(q, from, to, appKey, salt, sign);
     }
 
     @Override
@@ -185,12 +215,16 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
     @Override
     public IBinder onBind(Intent intent) {
         Log.i(TAG, "onBind");
-        return null;
+        return mBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         Log.i(TAG, "onUnbind");
+        if (attachedAct()) {
+            activity.clear();
+            activity = null;
+        }
         return super.onUnbind(intent);
     }
 

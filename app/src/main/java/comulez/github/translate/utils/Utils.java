@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.Spannable;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -203,7 +200,6 @@ public class Utils {
      * 设置输入框的光标到末尾
      */
     public static final void setEditTextSelectionToEnd(EditText editText) {
-        Editable editable = editText.getEditableText();
-        Selection.setSelection((Spannable) editable, editable.toString().length());
+        editText.setSelection(editText.getText().length());
     }
 }

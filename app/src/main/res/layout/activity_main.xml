@@ -24,12 +24,12 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
-            android:layout_toEndOf="@+id/tv_word"
+            android:layout_toEndOf="@+id/et_word"
             android:textColor="@android:color/white"
             tools:text="[wɑ:t]" />
 
         <EditText
-            android:id="@+id/tv_word"
+            android:id="@+id/et_word"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"

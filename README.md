@@ -1,5 +1,6 @@
 # Translate
-一个翻译APP
+
+一个MVP架构的翻译APP.
 
 ## gif
 <img src="https://github.com/Ulez/Translate/blob/master/screenshots/view.gif" width = "300" height = "507.6" align=center />
