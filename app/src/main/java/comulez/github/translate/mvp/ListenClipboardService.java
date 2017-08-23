@@ -122,8 +122,11 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
         }
         try {
             tipView.update(youDaoBean);
-            mWindowManager.addView(tipView, getPopViewParams());
-        } catch (Exception e) {
+            if (tipView.getParent() != null)
+                handler.removeCallbacksAndMessages(null);
+            else
+                mWindowManager.addView(tipView, getPopViewParams());
+        } catch (IllegalStateException e) {
             e.printStackTrace();
         }
         tipView.startWithAnim();
@@ -155,13 +158,7 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
         int h = WindowManager.LayoutParams.WRAP_CONTENT;
 
         int flags = 0;
-        int type;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            type = WindowManager.LayoutParams.TYPE_TOAST;
-        } else {
-            type = WindowManager.LayoutParams.TYPE_PHONE;
-        }
-
+        int type = WindowManager.LayoutParams.TYPE_PHONE;
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(w, h, type, flags, PixelFormat.TRANSLUCENT);
         layoutParams.gravity = Gravity.TOP;
         layoutParams.format = PixelFormat.RGBA_8888;
