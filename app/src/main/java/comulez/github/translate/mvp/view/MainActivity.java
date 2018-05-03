@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
                 break;
             case R.id.iv_trans:
                 String q = etWord.getText().toString();
-                clipboardService.translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                clipboardService.translate(q, "auto", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                 break;
             case R.id.button:
                 stopService(intent);

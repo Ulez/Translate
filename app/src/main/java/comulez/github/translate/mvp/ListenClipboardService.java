@@ -187,7 +187,7 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
                             Utils.t(R.string.cant);
                             return;
                         }
-                        translate(q, "en", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
+                        translate(q, "auto", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                     } catch (Exception e) {
                         Utils.t(R.string.cant);
                         e.printStackTrace();
