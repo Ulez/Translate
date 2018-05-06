@@ -37,6 +37,7 @@ public class Constant {
     public static final int ERROR404 = 0x10;
 
     public static final int Unknown_Host_ERROR = 0x11;
+    public static final String youdao = "youdao";
     public static final String showPop = "showPop";
     public static final String appkey = "7d3db18774c877c1";
     public static final String miyao="LvFWm7lDmGNJLu3fRSB7f5PmlkrIlxxR";

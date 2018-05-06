@@ -16,6 +16,7 @@ import java.lang.ref.WeakReference;
 import comulez.github.translate.R;
 import comulez.github.translate.beans.YouDaoBean;
 import comulez.github.translate.mvp.ListenClipboardService;
+import comulez.github.translate.utils.Constant;
 import comulez.github.translate.utils.Utils;
 
 /**
@@ -80,7 +81,11 @@ public class TipView extends LinearLayout {
             youDao = youDaoBean;
             resetText();
             tvWord.setText(youDaoBean.getQuery());
-            tvResult.setText(youDaoBean.getTranslation().get(0));
+            if(Utils.getBoolean(Constant.youdao, true)){
+                tvResult.setText(youDaoBean.getTranslation().get(0));
+            }else {
+                tvResult.setText(youDaoBean.getTrans_result().get(0).getDst());
+            }
             tvPronounce.setText("[" + youDaoBean.getBasic().getPhonetic() + "]");
             startWithAnim();
         } catch (Exception e) {

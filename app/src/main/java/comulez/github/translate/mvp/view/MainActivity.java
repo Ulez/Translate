@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,10 +34,13 @@ import comulez.github.translate.utils.Constant;
 import comulez.github.translate.utils.Utils;
 
 import static comulez.github.translate.utils.Constant.showPop;
+import static comulez.github.translate.utils.Constant.youdao;
 
 public class MainActivity extends AppCompatActivity implements ITranslateView {
 
     private static String TAG = "MainActivity";
+    @Bind(R.id.cb)
+    CheckBox etCb;
     @Bind(R.id.et_word)
     EditText etWord;
     @Bind(R.id.iv_trans)
@@ -71,11 +75,28 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        setTransType();
+        etCb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.putT(Constant.youdao, !Utils.getBoolean(Constant.youdao, true));
+                setTransType();
+            }
+        });
         intent = new Intent(this, ListenClipboardService.class);
         startService(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         askForPermission();
+    }
+
+    private void setTransType() {
+        if(Utils.getBoolean(Constant.youdao, true)){
+            etCb.setChecked(true);
+            etCb.setText("有道翻译");
+        }else {
+            etCb.setChecked(true);
+            etCb.setText("百度翻译");
+        }
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -175,13 +196,23 @@ public class MainActivity extends AppCompatActivity implements ITranslateView {
         try {
             if (youDaoBean != null) {
                 resetText();
-                etWord.setText(youDaoBean.getQuery());
-                Utils.setEditTextSelectionToEnd(etWord);
-                tvResult.setText(youDaoBean.getTranslation().get(0));
-                String phonetic = youDaoBean.getBasic().getPhonetic();
-                if (!TextUtils.isEmpty(phonetic))
-                    tvPronounce.setText("[" + phonetic + "]");
-                tvExplains.setText(Utils.getALl(youDaoBean.getBasic().getExplains(), youDaoBean.getWeb()));
+                if(Utils.getBoolean(Constant.youdao, true)){
+                    etWord.setText(youDaoBean.getQuery());
+                    Utils.setEditTextSelectionToEnd(etWord);
+                    tvResult.setText(youDaoBean.getTranslation().get(0));
+                    String phonetic = youDaoBean.getBasic().getPhonetic();
+                    if (!TextUtils.isEmpty(phonetic))
+                        tvPronounce.setText("[" + phonetic + "]");
+                    tvExplains.setText(Utils.getALl(youDaoBean.getBasic().getExplains(), youDaoBean.getWeb()));
+                }{
+//                    etWord.setText(youDaoBean.getQuery());
+                    Utils.setEditTextSelectionToEnd(etWord);
+                    tvResult.setText(youDaoBean.getTrans_result().get(0).getDst());
+//                    String phonetic = youDaoBean.getBasic().getPhonetic();
+//                    if (!TextUtils.isEmpty(phonetic))
+//                        tvPronounce.setText("[" + phonetic + "]");
+//                    tvExplains.setText(Utils.getALl(youDaoBean.getBasic().getExplains(), youDaoBean.getWeb()));
+                }
             } else {
                 tvResult.setText(getString(R.string.noresult));
             }
