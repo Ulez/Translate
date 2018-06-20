@@ -180,13 +180,18 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
             @Override
             public void onPrimaryClipChanged() {
                 if (Utils.compareTime(System.currentTimeMillis())) {
-                    Log.i(TAG, "onPrimaryClipChanged");
+//                    Log.i(TAG, "onPrimaryClipChanged");
                     try {
-                        String q = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
-                        if (TextUtils.isEmpty(q)) {
-                            Utils.t(R.string.cant);
-                            return;
+                        CharSequence charSequence = clipboard.getPrimaryClip().getItemAt(0).getText();
+//                        Log.e("lcy","getItem="+clipboard.getPrimaryClip().getItemAt(0).toString());
+                        if (TextUtils.isEmpty(charSequence)) {
+                            charSequence = clipboard.getPrimaryClip().getItemAt(0).coerceToText(ListenClipboardService.this);
+                            if (TextUtils.isEmpty(charSequence)) {
+                                Utils.t(R.string.cant);
+                                return;
+                            }
                         }
+                        String q = charSequence.toString();
                         translate(q, "auto", "zh_CHS", Constant.appkey, 2, Utils.md5(Constant.appkey + q + 2 + Constant.miyao));
                     } catch (Exception e) {
                         Utils.t(R.string.cant);
