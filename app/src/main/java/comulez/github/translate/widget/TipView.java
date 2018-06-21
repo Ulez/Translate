@@ -3,6 +3,7 @@ package comulez.github.translate.widget;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -81,12 +82,14 @@ public class TipView extends LinearLayout {
             youDao = youDaoBean;
             resetText();
             tvWord.setText(youDaoBean.getQuery());
-            if(Utils.getBoolean(Constant.youdao, true)){
+            if (Utils.getBoolean(Constant.youdao, true)) {
                 tvResult.setText(youDaoBean.getTranslation().get(0));
-            }else {
+            } else {
                 tvResult.setText(youDaoBean.getTrans_result().get(0).getDst());
             }
-            tvPronounce.setText("[" + youDaoBean.getBasic().getPhonetic() + "]");
+            if (!TextUtils.isEmpty(youDaoBean.getBasic().getPhonetic()))
+                tvPronounce.setText("[" + youDaoBean.getBasic().getPhonetic() + "]");
+            else tvPronounce.setText("");
             startWithAnim();
         } catch (Exception e) {
             e.printStackTrace();

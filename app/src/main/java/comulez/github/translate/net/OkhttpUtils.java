@@ -65,7 +65,7 @@ public class OkhttpUtils {
                                     .build();
                             //重建这个request，通过builder.url(newFullUrl).build()；
                             //然后返回一个response至此结束修改
-                            Log.e("lcy", "newFullUrl=" + newFullUrl);
+//                            Log.e("lcy", "newFullUrl=" + newFullUrl);
                             return chain.proceed(builder.url(newFullUrl).build());
                         } else {
                             return chain.proceed(request);
