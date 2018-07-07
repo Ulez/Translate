@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import comulez.github.translate.R;
 import comulez.github.translate.beans.YouDaoBean;
@@ -102,6 +104,7 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
 
     @Override
     public void showResult(YouDaoBean youDaoBean) {
+        cancelHide();
         Log.i(TAG, "service showResult");
         if (attachedAct()) {
             activity.get().showResult(youDaoBean);
@@ -187,8 +190,15 @@ public class ListenClipboardService extends MvpBaseService<ITranslateView, Trans
                         if (TextUtils.isEmpty(charSequence)) {
                             charSequence = clipboard.getPrimaryClip().getItemAt(0).coerceToText(ListenClipboardService.this);
                             if (TextUtils.isEmpty(charSequence)) {
-                                Utils.t(R.string.cant);
-                                return;
+                                String cc = clipboard.getPrimaryClip().getItemAt(0).getHtmlText();
+                                Matcher m = Pattern.compile("<.*>(.*)<.*>").matcher(cc);
+                                if (m.find()) {
+                                    charSequence = m.group(1);
+                                }
+                                if (TextUtils.isEmpty(charSequence)) {
+                                    Utils.t(R.string.cant);
+                                    return;
+                                }
                             }
                         }
                         String q = charSequence.toString();
